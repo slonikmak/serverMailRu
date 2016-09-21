@@ -1,6 +1,10 @@
-import org.eclipse.jetty.server.*;
+package main;
+
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import servlets.Frontend;
+import servlets.MirrorServlet;
 
 
 /**
@@ -9,15 +13,21 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class Main {
     public static void main(String[] args) throws Exception {
         Frontend frontend = new Frontend();
+        MirrorServlet mirrorServlet = new MirrorServlet();
 
 
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        //context.addServlet(new ServletHolder(frontend), "/authform");
+        context.addServlet(new ServletHolder(mirrorServlet), "/*");
         server.setHandler(context);
-        context.addServlet(new ServletHolder(frontend), "/authform");
+
 
         server.start();
+        System.out.println("Server started");
+        java.util.logging.Logger.getGlobal().info("Server started");
         server.join();
+
 
     }
 }
